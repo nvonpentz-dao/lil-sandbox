@@ -168,22 +168,22 @@ task('deploy', 'Deploys NFTDescriptor, NounsDescriptor, NounsSeeder, and NounsTo
           'ether',
         )} ETH`,
       );
+// TODO uncomment
+//       result = await promptjs.get([
+//         {
+//           properties: {
+//             confirm: {
+//               type: 'string',
+//               description: 'Type "DEPLOY" to confirm:',
+//             },
+//           },
+//         },
+//       ]);
 
-      result = await promptjs.get([
-        {
-          properties: {
-            confirm: {
-              type: 'string',
-              description: 'Type "DEPLOY" to confirm:',
-            },
-          },
-        },
-      ]);
-
-      if (result.confirm != 'DEPLOY') {
-        console.log('Exiting');
-        return;
-      }
+//       if (result.confirm != 'DEPLOY') {
+//         console.log('Exiting');
+//         return;
+//       }
 
       console.log('Deploying...');
 
