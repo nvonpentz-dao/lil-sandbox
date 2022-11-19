@@ -3,6 +3,7 @@
 pragma solidity ^0.8.6;
 
 import 'forge-std/Test.sol';
+import { NounsAuctionHouse } from '../../../contracts/NounsAuctionHouse.sol';
 import { NounsDAOExecutor } from '../../../contracts/governance/NounsDAOExecutor.sol';
 import { NounsDAOLogicV1 } from '../../../contracts/governance/NounsDAOLogicV1.sol';
 import { IProxyRegistry } from '../../../contracts/external/opensea/IProxyRegistry.sol';
@@ -18,7 +19,7 @@ abstract contract DeployUtils is Test {
     uint256 constant PROPOSAL_THRESHOLD = 1;
     uint256 constant QUORUM_VOTES_BPS = 2000;
 
-    function _deployTokenAndDAOAndPopulateDescriptor(
+    function _deployTokenAndDAO(
         address noundersDAO,
         address nounsDAO,
         address vetoer,
@@ -53,5 +54,3 @@ abstract contract DeployUtils is Test {
         return (address(nounsToken), address(proxy));
     }
 }
-
-
