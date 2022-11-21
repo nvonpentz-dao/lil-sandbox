@@ -29,7 +29,7 @@ export interface Auction {
 export interface VrgdaAuction extends Auction {
   updateInterval: EthersBN;
   //the time the auction will drop in price
-  dropTime?: EthersBN;
+  priceDropTime: Date;
   blocksRemaining?: EthersBN;
 }
 

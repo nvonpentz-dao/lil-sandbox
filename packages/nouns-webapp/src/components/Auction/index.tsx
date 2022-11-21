@@ -18,7 +18,8 @@ import {
 import { beige, grey } from '../../utils/nounBgColors';
 import { useContractReads } from 'wagmi';
 import { NounsVRGDAAuctionHouseABI } from '../../pages/Auction/vrgdaABI';
-import { BigNumber } from 'ethers';
+import { BigNumber as EthersBN } from 'ethers';
+import BigNumber from 'bignumber.js';
 
 export const vrgdaAuctionHouseContract = {
   addressOrName: '0x9A283c74A05Cdb60482B6EFf7a7CCCb301fD8B44',
@@ -46,16 +47,24 @@ const Auction: React.FC<AuctionProps> = props => {
       },
     ],
   });
-  const updateInterval = data?.[0] as unknown as BigNumber;
-  const startTime = data?.[1] as unknown as BigNumber;
+  const updateInterval = data?.[0] as unknown as EthersBN;
+  const startTime = data?.[1] as unknown as EthersBN;
   const nextNoun = data?.[2] as any;
   console.log('data', data);
 
+  //start time + update interval * n that's > new Date == the price drop time
+  const priceDropTime = new Date(
+    startTime.toNumber() * 1000 +
+      updateInterval.toNumber() *
+        Math.ceil((new Date().getTime() - startTime.toNumber() * 1000) / updateInterval.toNumber()),
+  );
+
   const currentAuction: VrgdaAuction = {
     nounId: nextNoun?.nounId,
-    startTime: startTime as unknown as BigNumber,
+    startTime,
     endTime: nextNoun?.endTime || nextNoun?.price,
     amount: nextNoun?.price,
+    priceDropTime,
     bidder: nextNoun?.bidder || 0x01,
     settled: nextNoun?.settled || false,
     updateInterval: updateInterval,
