@@ -59,6 +59,7 @@ export const CHAIN_ID: SupportedChains = parseInt(process.env.REACT_APP_CHAIN_ID
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY ?? '';
 
 const INFURA_PROJECT_ID = process.env.REACT_APP_INFURA_PROJECT_ID;
+const ALCHEMY_PROJECT_ID = process.env.REACT_APP_ALCHEMY_PROJECT_ID;
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -68,7 +69,6 @@ const isLocalhost = Boolean(
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
 );
 
-//TODO: replaced infura for prod
 export const createNetworkHttpUrl = (network: string): string => {
   const custom = process.env[`REACT_APP_${network.toUpperCase()}_JSONRPC`];
 
@@ -77,7 +77,7 @@ export const createNetworkHttpUrl = (network: string): string => {
   } else {
     return custom || isLocalhost
       ? `https://${network}.infura.io/v3/${INFURA_PROJECT_ID}`
-      : `https://eth-mainnet.alchemyapi.io/v2/Uf_tG0rA4DtQGJii7eN-f_MV3WiC13Q3`;
+      : `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_PROJECT_ID}`;
   }
 };
 
@@ -87,9 +87,7 @@ export const createNetworkWsUrl = (network: string): string => {
   if (network === 'rinkeby' || network === 'goerli') {
     return custom || `wss://${network}.infura.io/ws/v3/${INFURA_PROJECT_ID}`;
   } else {
-    return custom || isLocalhost
-      ? `wss://${network}.infura.io/ws/v3/${INFURA_PROJECT_ID}`
-      : 'wss://eth-mainnet.alchemyapi.io/v2/Uf_tG0rA4DtQGJii7eN-f_MV3WiC13Q3';
+    return custom || `wss://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_PROJECT_ID}`;
   }
 };
 
@@ -191,3 +189,5 @@ export const wagmiClient = createClient({
 });
 
 export default config;
+
+export const multicallOnLocalhost = '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e';
