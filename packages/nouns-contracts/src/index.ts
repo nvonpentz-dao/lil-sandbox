@@ -11,3 +11,5 @@ export { NounsDaoLogicV1__factory as NounsDaoLogicV1Factory } from '../typechain
 
 //vrgda
 export { default as NounsVRGDAAuctionHouseABI } from '../abi/contracts/LilVRGDA.sol/LilVRGDA.json';
+
+export { ILilVrgda__factory as NounsVrgdaAuctionFactory } from '../typechain/factories/ILilVrgda__factory';
