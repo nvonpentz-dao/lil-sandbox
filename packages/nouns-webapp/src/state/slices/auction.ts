@@ -75,15 +75,7 @@ export const auctionSlice = createSlice({
       console.log(`from set full auction: `, action.payload);
       state.activeAuction = reduxSafeAuction(action.payload);
     },
-    appendBid: (state, action: PayloadAction<BidEvent>) => {
-      if (!(state.activeAuction && auctionsEqual(state.activeAuction, action.payload))) return;
-      if (containsBid(state.bids, action.payload)) return;
-      state.bids = [reduxSafeBid(action.payload), ...state.bids];
-      const maxBid_ = maxBid(state.bids);
-      state.activeAuction.amount = BigNumber.from(maxBid_.value).toJSON();
-      state.activeAuction.bidder = maxBid_.sender;
-      console.log('processed bid', action.payload);
-    },
+
     setAuctionSettled: (state, action: PayloadAction<AuctionSettledEvent>) => {
       if (!(state.activeAuction && auctionsEqual(state.activeAuction, action.payload))) return;
       state.activeAuction.settled = true;
@@ -91,20 +83,9 @@ export const auctionSlice = createSlice({
       state.activeAuction.amount = BigNumber.from(action.payload.amount).toJSON();
       console.log('processed auction settled', action.payload);
     },
-    setAuctionExtended: (state, action: PayloadAction<AuctionExtendedEvent>) => {
-      if (!(state.activeAuction && auctionsEqual(state.activeAuction, action.payload))) return;
-      state.activeAuction.endTime = BigNumber.from(action.payload.endTime).toJSON();
-      console.log('processed auction extended', action.payload);
-    },
   },
 });
 
-export const {
-  setActiveAuction,
-  appendBid,
-  setAuctionExtended,
-  setAuctionSettled,
-  setFullAuction,
-} = auctionSlice.actions;
+export const { setActiveAuction, setAuctionSettled, setFullAuction } = auctionSlice.actions;
 
 export default auctionSlice.reducer;

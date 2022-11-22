@@ -10,7 +10,7 @@ const Banner = () => {
           <h1 style={{textAlign:'center'}}>
             ONE LIL NOUN,
             <br />
-            EVERY 15 MINUTES,
+            EVERY VRGDA CYCLE,
             <br />
             FOREVER.
           </h1>

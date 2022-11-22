@@ -49,7 +49,7 @@ const NavBar = () => {
     ? NavBarButtonStyle.COOL_INFO
     : NavBarButtonStyle.WARM_INFO;
 
-  const [bigNounBalance, setBigNounBalance] = useState('...');
+  const [bigNounBalance, setBigNounBalance] = useState('0');
 
   const fetchNounsQuery = `
     query {
@@ -103,7 +103,8 @@ const NavBar = () => {
                 TESTNET
               </Nav.Item>
             )}
-
+            {/* TODO uncomment */}
+            {/* 
             <Nav.Item>
               {treasuryBalance && (
                 <Nav.Link
@@ -119,7 +120,7 @@ const NavBar = () => {
                   />
                 </Nav.Link>
               )}
-            </Nav.Item>
+            </Nav.Item> */}
           </div>
           <Navbar.Toggle className={classes.navBarToggle} aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end">

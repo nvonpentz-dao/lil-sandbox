@@ -12,9 +12,7 @@ import logs from './state/slices/logs';
 import auction, {
   reduxSafeAuction,
   reduxSafeNewAuction,
-  reduxSafeBid,
   setActiveAuction,
-  setAuctionExtended,
   setAuctionSettled,
   setFullAuction,
 } from './state/slices/auction';
@@ -30,20 +28,20 @@ import {
   ApolloProvider,
   HttpLink,
   InMemoryCache,
-  Operation,
   useQuery,
 } from '@apollo/client';
-import { clientFactory, latestAuctionsQuery, singularAuctionQuery } from './wrappers/subgraph';
+import { latestAuctionsQuery, singularAuctionQuery } from './wrappers/subgraph';
 import { useEffect } from 'react';
 import pastAuctions, { addPastAuctions } from './state/slices/pastAuctions';
 import LogsUpdater from './state/updaters/logs';
-import config, { CHAIN_ID, createNetworkHttpUrl } from './config';
+import config, { CHAIN_ID, createNetworkHttpUrl, multicallOnLocalhost } from './config';
 import { WebSocketProvider } from '@ethersproject/providers';
 import { BigNumber, BigNumberish, providers } from 'ethers';
 import { NounsAuctionHouseFactory } from '@lilnounsdao/sdk';
+//cc @nvonpentz
+// import { NounsVrgdaAuctionFactory } from '@lilnounsdao/sdk';
 import dotenv from 'dotenv';
 import { useAppDispatch, useAppSelector } from './hooks';
-import { appendBid } from './state/slices/auction';
 import { ConnectedRouter, connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
 import { applyMiddleware, createStore, combineReducers, PreloadedState } from 'redux';
@@ -100,8 +98,11 @@ const useDappConfig = {
     [ChainId.Rinkeby]: createNetworkHttpUrl('rinkeby'),
     [ChainId.Mainnet]: createNetworkHttpUrl('mainnet'),
     [ChainId.Hardhat]: 'http://localhost:8545',
-    [ChainId.Goerli]: createNetworkHttpUrl('goerli'),
+    [ChainId.Goerli]:  createNetworkHttpUrl('goerli'),
   },
+  multicallAddresses: {
+    [ChainId.Hardhat]: multicallOnLocalhost,
+  }
 };
 
 const defaultLink = new HttpLink({
@@ -158,23 +159,9 @@ const ChainSubscriber: React.FC = () => {
       wsProvider,
     );
 
-    const bidFilter = nounsAuctionHouseContract.filters.AuctionBid(null, null, null, null);
-    const extendedFilter = nounsAuctionHouseContract.filters.AuctionExtended(null, null);
     const createdFilter = nounsAuctionHouseContract.filters.AuctionCreated(null, null, null);
     const settledFilter = nounsAuctionHouseContract.filters.AuctionSettled(null, null, null);
-    const processBidFilter = async (
-      nounId: BigNumberish,
-      sender: string,
-      value: BigNumberish,
-      extended: boolean,
-      event: any,
-    ) => {
-      const timestamp = (await event.getBlock()).timestamp;
-      const transactionHash = event.transactionHash;
-      dispatch(
-        appendBid(reduxSafeBid({ nounId, sender, value, extended, transactionHash, timestamp })),
-      );
-    };
+
     const processAuctionCreated = (
       nounId: BigNumberish,
       startTime: BigNumberish,
@@ -192,9 +179,7 @@ const ChainSubscriber: React.FC = () => {
       dispatch(setLastAuctionNounId(nounIdNumber));
       dispatch(setLastAuctionStartTime(startTimeNumber));
     };
-    const processAuctionExtended = (nounId: BigNumberish, endTime: BigNumberish) => {
-      dispatch(setAuctionExtended({ nounId, endTime }));
-    };
+
     const processAuctionSettled = (nounId: BigNumberish, winner: string, amount: BigNumberish) => {
       dispatch(setAuctionSettled({ nounId, amount, winner }));
     };
@@ -206,22 +191,10 @@ const ChainSubscriber: React.FC = () => {
 
     dispatch(setLastAuctionStartTime(currentAuction.startTime.toNumber()));
 
-    // Fetch the previous 24hours of  bids
-    const previousBids = await nounsAuctionHouseContract.queryFilter(bidFilter, 0 - BLOCKS_PER_DAY);
-    for (const event of previousBids) {
-      if (event.args === undefined) return;
-      processBidFilter(...(event.args as [BigNumber, string, BigNumber, boolean]), event);
-    }
-
-    nounsAuctionHouseContract.on(bidFilter, (nounId, sender, value, extended, event) =>
-      processBidFilter(nounId, sender, value, extended, event),
-    );
     nounsAuctionHouseContract.on(createdFilter, (nounId, startTime, endTime) =>
       processAuctionCreated(nounId, startTime, endTime),
     );
-    nounsAuctionHouseContract.on(extendedFilter, (nounId, endTime) =>
-      processAuctionExtended(nounId, endTime),
-    );
+
     nounsAuctionHouseContract.on(settledFilter, (nounId, winner, amount) =>
       processAuctionSettled(nounId, winner, amount),
     );
@@ -288,30 +261,30 @@ const rollbarConfig = {
 
 ReactDOM.render(
   <RollbarProvider config={rollbarConfig}>
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <ChainSubscriber />
-          <React.StrictMode>
-            <Web3ReactProvider
-              getLibrary={
-                provider => new Web3Provider(provider) // this will vary according to whether you use e.g. ethers or web3.js
-              }
-            >
-              <ApolloProvider client={client}>
-                <PastAuctions />
-                <DAppProvider config={useDappConfig}>
-                  <ErrorModalProvider>
-                    <AuthProvider>
-                      <App />
-                      <Updaters />
-                    </AuthProvider>
-                  </ErrorModalProvider>
-                </DAppProvider>
-              </ApolloProvider>
-            </Web3ReactProvider>
-          </React.StrictMode>
-        </ConnectedRouter>
-      </Provider>
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <ChainSubscriber />
+        <React.StrictMode>
+          <Web3ReactProvider
+            getLibrary={
+              provider => new Web3Provider(provider) // this will vary according to whether you use e.g. ethers or web3.js
+            }
+          >
+            <ApolloProvider client={client}>
+              <PastAuctions />
+              <DAppProvider config={useDappConfig}>
+                <ErrorModalProvider>
+                  <AuthProvider>
+                    <App />
+                    <Updaters />
+                  </AuthProvider>
+                </ErrorModalProvider>
+              </DAppProvider>
+            </ApolloProvider>
+          </Web3ReactProvider>
+        </React.StrictMode>
+      </ConnectedRouter>
+    </Provider>
     ,
   </RollbarProvider>,
   document.getElementById('root'),
