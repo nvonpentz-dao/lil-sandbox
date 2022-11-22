@@ -13,7 +13,7 @@ import { NounsAuctionHouseFactory } from '@lilnounsdao/sdk';
 import config from '../../config';
 import WalletConnectModal from '../WalletConnectModal';
 import InfoModal from '../InfoModal';
-import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+
 import { vrgdaAuctionHouseContract } from '../Auction';
 
 const computeMinimumNextBid = (
@@ -84,110 +84,18 @@ const Buy: React.FC<{
   const dispatch = useAppDispatch();
   const setModal = useCallback((modal: AlertModal) => dispatch(setAlertModal(modal)), [dispatch]);
 
-  const minBidIncPercentage = useAuctionMinBidIncPercentage();
-
-  const { state: placeBidState } = useContractFunction(
-    nounsAuctionHouseContract,
-    AuctionHouseContractFunction.createBid,
-  );
-  const { send: settleAuction, state: settleAuctionState } = useContractFunction(
-    nounsAuctionHouseContract,
-    AuctionHouseContractFunction.settleCurrentAndCreateNewAuction,
-  );
-
-  const {
-    config: buyNounConfig,
-    error: configError,
-    isSuccess: isConfigSuccess,
-    isError: isConfigError,
-    data: configData,
-    isFetched,
-  } = usePrepareContractWrite({
-    ...vrgdaAuctionHouseContract,
-    functionName: 'settleAuction',
-    args: [auction.amount, auction.nounId, auction.parentBlockHash],
-  });
-  console.log('==========');
-
-  console.log('configData', configData);
-  console.log('configError', configError);
-  console.log('isConfigSuccess', isConfigSuccess);
-  console.log('isConfigError', isConfigError);
-  console.log('isFetched', isFetched);
-  console.log('==========');
-
-  const { data, isLoading, isSuccess, write, isError, error } = useContractWrite(buyNounConfig);
-
-  console.log('data', data);
-  console.log('isLoading', isLoading);
-  console.log('isSuccess', isSuccess);
-  console.log('isError', isError);
-  console.log('error', error);
-
   const buyNounHandler = () => {
     console.log('buying noun');
-    if (write) {
-      console.log('calling write');
-      write();
-    }
+    // if (write) {
+    console.log('calling write');
+    // write();
+    // }
   };
   const clearBidInput = () => {
     if (bidInputRef.current) {
       bidInputRef.current.value = '';
     }
   };
-
-  // successful bid using redux store state
-  useEffect(() => {
-    if (!account) return;
-
-    // tx state is mining
-    const isMiningUserTx = placeBidState.status === 'Mining';
-    // allows user to rebid against themselves so long as it is not the same tx
-    const isCorrectTx = currentBid(bidInputRef).isEqualTo(new BigNumber(auction.amount.toString()));
-    if (isMiningUserTx && auction.bidder === account && isCorrectTx) {
-      placeBidState.status = 'Success';
-      setModal({
-        title: 'Success',
-        message: `Bid was placed successfully!`,
-        isMilestone: auction.amount.toString().includes('69'),
-        show: true,
-      });
-      setBidButtonContent({ loading: false, content: 'Place bid' });
-      clearBidInput();
-    }
-  }, [auction, placeBidState, account, setModal]);
-
-  // placing bid transaction state hook
-  useEffect(() => {
-    switch (!auctionEnded && placeBidState.status) {
-      case 'None':
-        setBidButtonContent({
-          loading: false,
-          content: 'Buy Now',
-        });
-        break;
-      case 'Mining':
-        setBidButtonContent({ loading: true, content: '' });
-        break;
-      case 'Fail':
-        setModal({
-          title: 'Transaction Failed',
-          message: placeBidState.errorMessage ? placeBidState.errorMessage : 'Please try again.',
-          show: true,
-        });
-        setBidButtonContent({ loading: false, content: 'Bid' });
-        break;
-      case 'Exception':
-        setModal({
-          title: 'Error',
-          message: placeBidState.errorMessage ? placeBidState.errorMessage : 'Please try again.',
-          show: true,
-        });
-        setBidButtonContent({ loading: false, content: 'Bid' });
-        break;
-    }
-  }, [placeBidState, auctionEnded, setModal]);
 
   //TODO: Refactor Modal to utilitse new modal design
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
@@ -198,54 +106,9 @@ const Buy: React.FC<{
     setShowBidHistoryModal(false);
   };
 
-  // settle auction transaction state hook
-  useEffect(() => {
-    switch (auctionEnded && settleAuctionState.status) {
-      case 'None':
-        setBidButtonContent({
-          loading: false,
-          content: 'Settle Auction',
-        });
-        break;
-      case 'Mining':
-        setBidButtonContent({ loading: true, content: '' });
-        break;
-      case 'Success':
-        setModal({
-          title: 'Success',
-          message: `Settled auction successfully!`,
-          show: true,
-        });
-        setBidButtonContent({ loading: false, content: 'Settle Auction' });
-        break;
-      case 'Fail':
-        setModal({
-          title: 'Transaction Failed',
-          message: settleAuctionState.errorMessage
-            ? settleAuctionState.errorMessage
-            : 'Please try again.',
-          show: true,
-        });
-        setBidButtonContent({ loading: false, content: 'Settle Auction' });
-        break;
-      case 'Exception':
-        setModal({
-          title: 'Error',
-          message: settleAuctionState.errorMessage
-            ? settleAuctionState.errorMessage
-            : 'Please try again.',
-          show: true,
-        });
-        setBidButtonContent({ loading: false, content: 'Settle Auction' });
-        break;
-    }
-  }, [settleAuctionState, auctionEnded, setModal]);
-
   if (!auction) return null;
 
-  const isDisabled =
-    placeBidState.status === 'Mining' || settleAuctionState.status === 'Mining' || !activeAccount;
-
+  const isDisabled = false;
   const isWalletConnected = activeAccount !== undefined;
 
   return (
