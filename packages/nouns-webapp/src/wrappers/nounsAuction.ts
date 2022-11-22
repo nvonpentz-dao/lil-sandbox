@@ -31,6 +31,7 @@ export interface VrgdaAuction extends Auction {
   //the time the auction will drop in price
   priceDropTime: Date;
   blocksRemaining?: EthersBN;
+  parentBlockHash: string;
 }
 
 const abi = new utils.Interface(NounsAuctionHouseABI);

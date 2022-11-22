@@ -1,20 +1,17 @@
-import { Auction, AuctionHouseContractFunction } from '../../wrappers/nounsAuction';
-import { connectContractToSigner, useEthers, useContractFunction } from '@usedapp/core';
+import { AuctionHouseContractFunction, VrgdaAuction } from '../../wrappers/nounsAuction';
+import { useEthers, useContractFunction } from '@usedapp/core';
 import { useAppSelector } from '../../hooks';
-import React, { useEffect, useState, useRef, ChangeEvent, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { utils, BigNumber as EthersBN } from 'ethers';
 import BigNumber from 'bignumber.js';
 import classes from './Buy.module.css';
-import { Spinner, InputGroup, FormControl, Button, Col } from 'react-bootstrap';
+import { Spinner, InputGroup, Button } from 'react-bootstrap';
 import { useAuctionMinBidIncPercentage } from '../../wrappers/nounsAuction';
 import { useAppDispatch } from '../../hooks';
 import { AlertModal, setAlertModal } from '../../state/slices/application';
 import { NounsAuctionHouseFactory } from '@lilnounsdao/sdk';
 import config from '../../config';
 import WalletConnectModal from '../WalletConnectModal';
-import SettleManuallyBtn from '../SettleManuallyBtn';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import InfoModal from '../InfoModal';
 import { useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { vrgdaAuctionHouseContract } from '../Auction';
@@ -56,12 +53,13 @@ const currentBid = (bidInputRef: React.RefObject<HTMLInputElement>) => {
 };
 
 const Buy: React.FC<{
-  auction: Auction;
+  auction: VrgdaAuction;
   auctionEnded: boolean;
 }> = props => {
   const activeAccount = useAppSelector(state => state.account.activeAccount);
   const { library } = useEthers();
   const { auction, auctionEnded } = props;
+  console.log('auction', auction);
 
   const nounsAuctionHouseContract = new NounsAuctionHouseFactory().attach(
     config.addresses.nounsAuctionHouseProxy,
@@ -107,11 +105,7 @@ const Buy: React.FC<{
   } = usePrepareContractWrite({
     ...vrgdaAuctionHouseContract,
     functionName: 'settleAuction',
-    args: [
-      auction.amount,
-      auction.nounId,
-      '0x5b502ad45fd80849d8afcff7853f3323538424465f73dbb0a0ea67416b0e396c',
-    ],
+    args: [auction.amount, auction.nounId, auction.parentBlockHash],
   });
   console.log('==========');
 

@@ -77,6 +77,7 @@ const Auction: React.FC<AuctionProps> = props => {
         bidder: nextNoun?.bidder || 0x01,
         settled: nextNoun?.settled || false,
         updateInterval: updateInterval,
+        parentBlockHash: nextNoun?.hash
       };
 
       setCurrentAuction(currentAuction);
