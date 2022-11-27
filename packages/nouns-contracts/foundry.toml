@@ -1,0 +1,6 @@
+[profile.default]
+src = 'contracts'
+out = 'artifacts/foundry'
+test = 'test/foundry'
+libs = ["../../node_modules", "lib"]
+ffi = true
