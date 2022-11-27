@@ -43,10 +43,10 @@ const config: HardhatUserConfig = {
         ? { mnemonic: process.env.MNEMONIC }
         : [process.env.WALLET_PRIVATE_KEY!].filter(Boolean),
     },
-    goerli: {
-      url: process.env.GOERLI_URL,
-      accounts: [process.env.WALLET_GOERLI_PRIVATE_KEY!],
-    },
+    // goerli: {
+    //   url: process.env.GOERLI_URL,
+    //   accounts: [process.env.WALLET_GOERLI_PRIVATE_KEY!],
+    // },
     hardhat: {
       initialBaseFeePerGas: 0,
       // chainId: 1,
