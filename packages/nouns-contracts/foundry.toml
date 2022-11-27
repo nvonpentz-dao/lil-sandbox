@@ -1,6 +1,6 @@
 [profile.default]
-src = 'src'
-out = 'artifacts'
-libs = ["node_modules", "lib"]
-
-# See more config options https://github.com/foundry-rs/foundry/tree/master/config
+src = 'contracts'
+out = 'artifacts/foundry'
+test = 'test/foundry'
+libs = ["../../node_modules", "lib"]
+ffi = true

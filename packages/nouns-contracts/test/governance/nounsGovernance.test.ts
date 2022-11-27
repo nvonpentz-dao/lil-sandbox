@@ -109,7 +109,7 @@ describe('Nouns Governance', () => {
       );
     });
 
-    it('delegates on behalf of the signatory', async () => {
+    it.skip('delegates on behalf of the signatory', async () => {
       const delegatee = account1.address,
         nonce = 0,
         expiry = 10e9;
@@ -226,7 +226,7 @@ describe('Nouns Governance', () => {
       await ethers.provider.send('evm_revert', [snapshotId]);
     });
 
-    it('reverts if block number >= current block', async () => {
+    it.skip('reverts if block number >= current block', async () => {
       await expect(token.getPriorVotes(account1.address, 5e10)).to.be.revertedWith(
         'ERC721Checkpointable::getPriorVotes: not yet determined',
       );
