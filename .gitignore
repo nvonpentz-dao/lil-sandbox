@@ -10,4 +10,3 @@ dist
 *.tsbuildinfo
 *.log
 *.tool-versions
-.npmrc

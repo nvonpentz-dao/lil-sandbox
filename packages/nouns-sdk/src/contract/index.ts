@@ -1,4 +1,4 @@
-export { getContractAddressesForChainOrThrow, getBigNounsContractAddressesForChainOrThrow } from './addresses';
+export { getContractAddressesForChainOrThrow } from './addresses';
 export { getContractsForChainOrThrow } from './contracts';
 export { ChainId, ContractAddresses } from './types';
 export {
@@ -7,10 +7,9 @@ export {
   NounsDescriptorABI,
   NounsSeederABI,
   NounsDAOABI,
-  NounsDAOV2ABI,
   NounsTokenFactory,
   NounsAuctionHouseFactory,
   NounsDescriptorFactory,
   NounsSeederFactory,
   NounsDaoLogicV1Factory,
-} from '@lilnounsdao/contracts';
+} from '@nouns/contracts';

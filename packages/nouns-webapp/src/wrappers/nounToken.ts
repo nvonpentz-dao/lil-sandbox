@@ -1,6 +1,6 @@
 import { useContractCall, useContractFunction, useEthers } from '@usedapp/core';
 import { BigNumber as EthersBN, ethers, utils } from 'ethers';
-import { NounsTokenABI, NounsTokenFactory } from '@lilnounsdao/contracts';
+import { NounsTokenABI, NounsTokenFactory } from '@nouns/contracts';
 import config, { cache, cacheKey, CHAIN_ID } from '../config';
 import { useQuery } from '@apollo/client';
 import { useEffect } from 'react';
@@ -29,7 +29,7 @@ const seedExpriyCacheKey = cacheKey(cache.seedExpriy, CHAIN_ID, config.addresses
 const bigNounSeedCacheKey = cacheKey(
   cache.bigNounSeed,
   CHAIN_ID,
-  config.bigNounsAddresses.nounsToken,
+  '0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03',
 );
 
 const isSeedValid = (seed: Record<string, any> | undefined) => {
@@ -169,7 +169,7 @@ export const useBigNounSeed = (nounId: EthersBN) => {
   // prettier-ignore
   const request = seed ? false : {
       abi,
-      address: config.bigNounsAddresses.nounsToken,
+      address: "0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03",
       method: 'seeds',
       args: [nounId],
     };

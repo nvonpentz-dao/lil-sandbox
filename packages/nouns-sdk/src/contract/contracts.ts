@@ -4,14 +4,11 @@ import {
   NounsDescriptorFactory,
   NounsSeederFactory,
   NounsDaoLogicV1Factory,
-} from "@lilnounsdao/contracts";
-import type { Signer } from "ethers";
-import type { Provider } from "@ethersproject/providers";
-import {
-  getContractAddressesForChainOrThrow,
-  getBigNounsContractAddressesForChainOrThrow,
-} from "./addresses";
-import { Contracts } from "./types";
+} from '@nouns/contracts';
+import type { Signer } from 'ethers';
+import type { Provider } from '@ethersproject/providers';
+import { getContractAddressesForChainOrThrow } from './addresses';
+import { Contracts } from './types';
 
 /**
  * Get contract instances that target the Ethereum mainnet
@@ -21,56 +18,31 @@ import { Contracts } from "./types";
  * @param signerOrProvider The ethers v5 signer or provider
  */
 export const getContractsForChainOrThrow = (
-  isNounsDAO: boolean = false,
   chainId: number,
-  signerOrProvider?: Signer | Provider
+  signerOrProvider?: Signer | Provider,
 ): Contracts => {
   const addresses = getContractAddressesForChainOrThrow(chainId);
-  const nounsAddresses = getContractAddressesForChainOrThrow(chainId);
 
-  return isNounsDAO
-    ? {
-        nounsTokenContract: NounsTokenFactory.connect(
-          nounsAddresses.nounsToken,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsAuctionHouseContract: NounsAuctionHouseFactory.connect(
-          nounsAddresses.nounsAuctionHouseProxy,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsDescriptorContract: NounsDescriptorFactory.connect(
-          nounsAddresses.nounsDescriptor,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsSeederContract: NounsSeederFactory.connect(
-          nounsAddresses.nounsSeeder,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsDaoContract: NounsDaoLogicV1Factory.connect(
-          nounsAddresses.nounsDAOProxy,
-          signerOrProvider as Signer | Provider
-        ),
-      }
-    : {
-        nounsTokenContract: NounsTokenFactory.connect(
-          addresses.nounsToken,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsAuctionHouseContract: NounsAuctionHouseFactory.connect(
-          addresses.nounsAuctionHouseProxy,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsDescriptorContract: NounsDescriptorFactory.connect(
-          addresses.nounsDescriptor,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsSeederContract: NounsSeederFactory.connect(
-          addresses.nounsSeeder,
-          signerOrProvider as Signer | Provider
-        ),
-        nounsDaoContract: NounsDaoLogicV1Factory.connect(
-          addresses.nounsDAOProxy,
-          signerOrProvider as Signer | Provider
-        ),
-      };
+  return {
+    nounsTokenContract: NounsTokenFactory.connect(
+      addresses.nounsToken,
+      signerOrProvider as Signer | Provider,
+    ),
+    nounsAuctionHouseContract: NounsAuctionHouseFactory.connect(
+      addresses.nounsAuctionHouseProxy,
+      signerOrProvider as Signer | Provider,
+    ),
+    nounsDescriptorContract: NounsDescriptorFactory.connect(
+      addresses.nounsDescriptor,
+      signerOrProvider as Signer | Provider,
+    ),
+    nounsSeederContract: NounsSeederFactory.connect(
+      addresses.nounsSeeder,
+      signerOrProvider as Signer | Provider,
+    ),
+    nounsDaoContract: NounsDaoLogicV1Factory.connect(
+      addresses.nounsDAOProxy,
+      signerOrProvider as Signer | Provider,
+    ),
+  };
 };

@@ -1,4 +1,4 @@
-import { PngImage } from '@lilnounsdao/sdk';
+import { PngImage } from '@nouns/sdk';
 import { promises as fs } from 'fs';
 import { PNG } from 'pngjs';
 

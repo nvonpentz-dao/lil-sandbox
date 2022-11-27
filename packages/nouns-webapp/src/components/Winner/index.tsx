@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { isMobileScreen } from '../../utils/isMobile';
 import Tooltip from '../Tooltip';
 import { buildEtherscanAddressLink } from '../../utils/etherscan';
-import config from '../../config';
 
 interface WinnerProps {
   winner: string;
@@ -67,7 +66,7 @@ const Winner: React.FC<WinnerProps> = props => {
 
   const nounsDAOContent = (
     <a
-      href={buildEtherscanAddressLink(config.bigNounsAddresses.nounsDaoExecutor)}
+      href={buildEtherscanAddressLink('0x0BC3807Ec262cB779b38D65b38158acC3bfedE10')}
       target={'_blank'}
       rel="noreferrer"
       className={classes.link}

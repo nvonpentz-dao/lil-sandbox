@@ -6,10 +6,6 @@
   font-family: 'Londrina Solid';
 }
 
-.inter {
-  font-family: 'Inter';
-}
-
 @media (min-width: 1400px) {
   .container,
   .container-lg,

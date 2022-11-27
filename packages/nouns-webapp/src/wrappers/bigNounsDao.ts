@@ -1,6 +1,7 @@
-import { NounsDAOABI, NounsDAOV2ABI, NounsDaoLogicV1Factory } from '@lilnounsdao/sdk';
+import { NounsDAOABI, NounsDaoLogicV1Factory } from '@nouns/sdk';
 import {
   ChainId,
+  useBlockMeta,
   useBlockNumber,
   useContractCall,
   useContractCalls,
@@ -12,8 +13,6 @@ import { defaultAbiCoder, Result } from 'ethers/lib/utils';
 import { useMemo } from 'react';
 import { useLogs } from '../hooks/useLogs';
 import * as R from 'ramda';
-import config, { CHAIN_ID } from '../config';
-import { useQuery } from '@apollo/client';
 import {
   ProposalData,
   ProposalCallResult,
@@ -22,21 +21,15 @@ import {
   ProposalSubgraphEntity,
   ProposalTransactionDetails,
 } from './nounsDao';
+import { CHAIN_ID } from '../config';
 import { bigNounsProposalsQuery } from './subgraph';
 import BigNumber from 'bignumber.js';
-import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
+import { useQuery } from '@apollo/client';
 
-export interface DynamicQuorumParams {
-  minQuorumVotesBPS: number;
-  maxQuorumVotesBPS: number;
-  quorumCoefficient: number;
-}
-
-const abi = new utils.Interface(NounsDAOV2ABI);
-// const abi_v2 = new utils.Interface(NounsDAOV2ABI);
-// console.log(`NounsDAOV2ABI: ${JSON.stringify(NounsDAOV2ABI)}`);
-
-const nounsDaoContract = new NounsDaoLogicV1Factory().attach(config.bigNounsAddresses.nounsDAOProxy);
+const abi = new utils.Interface(NounsDAOABI);
+const nounsDaoContract = new NounsDaoLogicV1Factory().attach(
+  '0x6f3E6272A167e8AcCb32072d08E0957F9c79223d',
+);
 
 // Start the log search at the mainnet deployment block to speed up log queries
 const fromBlock = CHAIN_ID === ChainId.Mainnet ? 12985453 : 0;
@@ -86,50 +79,6 @@ const removeItalics = (text: string | null): string | null =>
   text ? text.replace(/__/g, '') : text;
 
 const removeMarkdownStyle = R.compose(removeBold, removeItalics);
-
-export const useCurrentQuorum = (
-  nounsDao: string,
-  proposalId: number,
-  skip: boolean,
-): number | undefined => {
-  const request = () => {
-    if (skip) return false;
-    return {
-      abi,
-      address: nounsDao,
-      method: 'quorumVotes',
-      args: [proposalId],
-    };
-  };
-  const [quorum] = useContractCall<[EthersBN]>(request()) || [];
-  return quorum?.toNumber();
-};
-
-export const useDynamicQuorumProps = (
-  nounsDao: string,
-  block: number,
-): DynamicQuorumParams | undefined => {
-  const [params] =
-    useContractCall<[DynamicQuorumParams]>({
-      abi,
-      address: nounsDao,
-      method: 'getDynamicQuorumParamsAt',
-      args: [block],
-    }) || [];
-
-  return params;
-};
-
-export const useBigNounProposalCountv2 = (): number | undefined => {
-  const [count] =
-    useContractCall<[EthersBN]>({
-      abi,
-      address: nounsDaoContract.address,
-      method: 'proposalCount',
-      args: [],
-    }) || [];
-  return count?.toNumber();
-};
 
 export const useHasVotedOnBigNounProposal = (proposalId: string | undefined): boolean => {
   const { account } = useEthers();
@@ -305,16 +254,16 @@ export const useAllBigNounProposalsViaSubgraph = (): ProposalData => {
   });
 
   const blockNumber = useBlockNumber();
-  const timestamp = useBlockTimestamp(blockNumber);
+  const { timestamp } = useBlockMeta();
 
-  const proposals = data?.daa?.map((proposal: ProposalSubgraphEntity) => {
+  const proposals = data?.proposals?.map((proposal: ProposalSubgraphEntity) => {
     const description = proposal.description?.replace(/\\n/g, '\n').replace(/(^['"]|['"]$)/g, '');
     return {
       id: proposal.id,
       title: R.pipe(extractTitle, removeMarkdownStyle)(description) ?? 'Untitled',
       description: description ?? 'No description.',
       proposer: proposal.proposer.id,
-      status: getProposalState(blockNumber, new Date((timestamp ?? 0) * 1000), proposal),
+      status: getProposalState(blockNumber, timestamp, proposal),
       proposalThreshold: parseInt(proposal.proposalThreshold),
       quorumVotes: parseInt(proposal.quorumVotes),
       forCount: parseInt(proposal.forVotes),
@@ -328,9 +277,6 @@ export const useAllBigNounProposalsViaSubgraph = (): ProposalData => {
       transactionHash: proposal.createdTransactionHash,
     };
   });
-
-  // console.log(`proposals??:  ${JSON.stringify(data.daa)}`);
-  
 
   return {
     loading,
@@ -399,17 +345,14 @@ export const useAllBigNounProposalsViaChain = (skip = false): ProposalData => {
 export const useAllBigNounProposals = (): ProposalData => {
   const subgraph = useAllBigNounProposalsViaSubgraph();
   const onchain = useAllBigNounProposalsViaChain(!subgraph.error);
-  return subgraph?.error ? onchain : subgraph;
+  // return subgraph?.error ? onchain : subgraph;
 
-  // const onchains = useAllBigNounProposalsViaChain(false);
-  // return onchains;
+  const onchains = useAllBigNounProposalsViaChain(false);
+  return onchains;
 };
 
 export const useBigNounProposal = (id: string | number): Proposal | undefined => {
-  const subgraph = useAllBigNounProposalsViaSubgraph();
-  const { data } = subgraph//useAllBigNounProposals();
-
-  // console.log(`useBigNounProposal: ${id.toString()} == ${JSON.stringify(data?.find(p => p.id === "171")?.title)}`);
+  const { data } = useAllBigNounProposals();
   return data?.find(p => p.id === id.toString());
 };
 

@@ -69,9 +69,6 @@
   font-size: 22px;
   font-family: 'PT Root UI';
   font-weight: bold;
-  text-decoration: none;
-  color: inherit;
-  margin-bottom: 1rem;
 }
 
 .proposalInfoWrapper {
@@ -84,7 +81,6 @@
 
 .proposalLink:hover {
   background: white;
-  color: inherit !important;
   cursor: pointer;
 }
 

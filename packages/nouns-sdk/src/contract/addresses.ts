@@ -1,6 +1,5 @@
-import { ContractAddresses } from "./types";
-import addresses from "./addresses.json";
-import nounsAddresses from "./nounsAddresses.json";
+import { ContractAddresses } from './types';
+import addresses from './addresses.json';
 
 /**
  * Get addresses of contracts that have been deployed to the
@@ -8,26 +7,12 @@ import nounsAddresses from "./nounsAddresses.json";
  * no known contracts deployed on the corresponding chain.
  * @param chainId The desired chainId
  */
-export const getContractAddressesForChainOrThrow = (
-  chainId: number
-): ContractAddresses => {
+export const getContractAddressesForChainOrThrow = (chainId: number): ContractAddresses => {
   const _addresses: Record<string, ContractAddresses> = addresses;
   if (!_addresses[chainId]) {
     throw new Error(
-      `Unknown chain id (${chainId}). No known contracts have been deployed on this chain.`
+      `Unknown chain id (${chainId}). No known contracts have been deployed on this chain.`,
     );
   }
   return _addresses[chainId];
-};
-
-export const getBigNounsContractAddressesForChainOrThrow = (
-  chainId: number
-): ContractAddresses => {
-  const _bigNounsAddresses: Record<string, ContractAddresses> = nounsAddresses;
-  if (!_bigNounsAddresses[chainId]) {
-    throw new Error(
-      `Unknown chain id (${chainId}). No known contracts have been deployed on this chain.`
-    );
-  }
-  return _bigNounsAddresses[chainId];
 };
