@@ -19,7 +19,7 @@ pragma solidity ^0.8.17;
 
 import { INounsSeederV2 } from './interfaces/INounsSeederV2.sol';
 import { INounsDescriptor } from './interfaces/INounsDescriptor.sol';
-import { NounsToken } from "contracts/NounsToken.sol";
+import { NounsToken } from 'contracts/NounsToken.sol';
 
 // Same as NounsSeederV1 except it can has a configurable updateInterval variable
 // determining how long a noun updates
@@ -75,20 +75,20 @@ contract NounsSeederV2 is INounsSeederV2 {
     }
 
     // Rounding function
-    function roundToNearest(uint x, uint32 multiple) internal pure returns (uint) {
-      // Calculate the remainder when x is divided by multiple
-      uint remainder = x % multiple;
-      
-      // If the remainder is less than half of the multiple,
-      // subtract the remainder from x to round down to the nearest multiple
-      if (remainder <= multiple / 2) {
-        x -= remainder;
-      }
-      // Otherwise, add the difference between the multiple and the remainder
-      // to x to round up to the nearest multiple
-      else {
-        x += multiple - remainder;
-      }
-      return x;
+    function roundToNearest(uint256 x, uint32 multiple) internal pure returns (uint256) {
+        // Calculate the remainder when x is divided by multiple
+        uint256 remainder = x % multiple;
+
+        // If the remainder is less than half of the multiple,
+        // subtract the remainder from x to round down to the nearest multiple
+        if (remainder <= multiple / 2) {
+            x -= remainder;
+        }
+        // Otherwise, add the difference between the multiple and the remainder
+        // to x to round up to the nearest multiple
+        else {
+            x += multiple - remainder;
+        }
+        return x;
     }
 }

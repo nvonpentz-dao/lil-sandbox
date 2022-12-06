@@ -1,4 +1,4 @@
-import { console } from "hardhat/console.sol";
+import { console } from 'hardhat/console.sol';
 import { INounsSeeder } from '../../contracts/interfaces/INounsSeeder.sol';
 import { NounsSeederV2 } from '../../contracts/NounsSeederV2.sol';
 import { LilNounsUnitTest } from './helpers/LilNounsUnitTest.sol';
@@ -25,11 +25,12 @@ contract NounsSeederV2UnitTest is LilNounsUnitTest {
     }
 
     function seedsEqual(INounsSeeder.Seed memory s1, INounsSeeder.Seed memory s2) internal pure returns (bool equal) {
-        return s1.background == s2.background &&
-               s1.body == s2.body &&
-               s1.accessory == s2.accessory &&
-               s1.head == s2.head &&
-               s1.glasses == s2.glasses;
+        return
+            s1.background == s2.background &&
+            s1.body == s2.body &&
+            s1.accessory == s2.accessory &&
+            s1.head == s2.head &&
+            s1.glasses == s2.glasses;
     }
 
     function testSetInterval() public {
@@ -48,7 +49,7 @@ contract NounsSeederV2UnitTest is LilNounsUnitTest {
         seederV2 = new NounsSeederV2(address(nounsToken));
 
         // SeederV1 and SeederV2 should return the same seed when update interval=1 (default)
-        for (uint i=0; i<1*seederV2.updateInterval(); i++) {
+        for (uint256 i = 0; i < 1 * seederV2.updateInterval(); i++) {
             INounsSeeder.Seed memory v1seed = seeder.generateSeed(initialNounId, descriptor);
             INounsSeeder.Seed memory v2seed = seederV2.generateSeed(initialNounId, descriptor);
             assertTrue(seedsEqual(v1seed, v2seed));
@@ -59,7 +60,7 @@ contract NounsSeederV2UnitTest is LilNounsUnitTest {
         seederV2.setUpdateInterval(2);
 
         // SeederV1 and SeederV2 should return the different seeds for odd blocks when update interval=2
-        for (uint i=0; i<1*seederV2.updateInterval(); i++) {
+        for (uint256 i = 0; i < 1 * seederV2.updateInterval(); i++) {
             INounsSeeder.Seed memory v1seed = seeder.generateSeed(initialNounId, descriptor);
             INounsSeeder.Seed memory v2seed = seederV2.generateSeed(initialNounId, descriptor);
             if (block.number % 2 == 0) {
