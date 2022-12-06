@@ -35,3 +35,22 @@ export interface Bid {
   transactionHash: string;
   timestamp: BigNumber;
 }
+
+//TODO: add vrgda types (rough copy of above - needs review )
+export interface VRGDAPurchaseEvent {
+  nounId: BigNumberish;
+  sender: string;
+  value: BigNumberish;
+  extended: boolean;
+  transactionHash: string;
+  timestamp: BigNumberish;
+}
+
+export interface VRGDAPurchase {
+  nounId: BigNumber;
+  sender: string;
+  value: BigNumber;
+  transactionHash: string;
+  timestamp: BigNumber;
+}
+

@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuctionState } from './auction';
 import { BigNumber } from '@ethersproject/bignumber';
 
+//TODO: Can this refer to past auctions via VRGDA and Auction house?
+
 interface PastAuctionsState {
   pastAuctions: AuctionState[];
 }
