@@ -3,6 +3,27 @@
     "inputs": [
       {
         "internalType": "int256",
+        "name": "_targetPrice",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "_priceDecayPercent",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "_perTimeUnit",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
         "name": "sold",
         "type": "int256"
       }

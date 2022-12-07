@@ -5974,10 +5974,10 @@
   dependencies:
     "@octokit/openapi-types" "^11.2.0"
 
-"@openzeppelin/contracts-upgradeable@^4.1.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.4.0.tgz#85161d87c840c5bce2b6ed0c727b407e774852ae"
-  integrity sha512-hIEyWJHu7bDTv6ckxOaV+K3+7mVzhjtyvp3QSaz56Rk5PscXtPAbkiNTb3yz6UJCWHPWpxVyULVgZ6RubuFEZg==
+"@openzeppelin/contracts-upgradeable@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.8.0.tgz#26688982f46969018e3ed3199e72a07c8d114275"
+  integrity sha512-5GeFgqMiDlqGT8EdORadp1ntGF0qzWZLmEY7Wbp/yVhN7/B3NNzCxujuI77ktlyG81N3CUZP8cZe3ZAQ/cW10w==
 
 "@openzeppelin/contracts@^4.1.0":
   version "4.4.0"
@@ -8470,9 +8470,9 @@ JSONStream@^1.0.4, JSONStream@^1.3.4, JSONStream@^1.3.5:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
 
-"VRGDAs@https://github.com/transmissions11/VRGDAs.git#3f35c0b6e2997fee1eb61e436e390d3d9470288b":
+"VRGDAs@https://github.com/nvonpentz/VRGDAs.git":
   version "1.0.0"
-  resolved "https://github.com/transmissions11/VRGDAs.git#3f35c0b6e2997fee1eb61e436e390d3d9470288b"
+  resolved "https://github.com/nvonpentz/VRGDAs.git#305e82629929b22bf5fada9ffd31ad5dee3115e6"
 
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"

@@ -56,7 +56,8 @@ contract LilNounsUnitTest is Test {
         );
         weth = new WETH();
 
-        vrgda = new LilVRGDA(
+        vrgda = new LilVRGDA();
+        vrgda.initialize(
             _targetPrice,
             _priceDecayPercent,
             _perTimeUnit,

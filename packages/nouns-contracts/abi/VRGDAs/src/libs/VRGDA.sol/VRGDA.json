@@ -1,0 +1,89 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "sold",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "perTimeUnit",
+        "type": "int256"
+      }
+    ],
+    "name": "getTargetSaleTimeLinear",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "sold",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "logisticLimit",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "timeScale",
+        "type": "int256"
+      }
+    ],
+    "name": "getTargetSaleTimeLogistic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "timeSinceStart",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "targetPrice",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "decayConstant",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "targetSaleTime",
+        "type": "int256"
+      }
+    ],
+    "name": "getVRGDAPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]
